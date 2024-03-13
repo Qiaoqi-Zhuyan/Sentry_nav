@@ -72,8 +72,6 @@ namespace nav_client{
     }__attribute__((packed));
 
     struct SendTwistPacket {
-
-
         /*       导航部分       */
         uint8_t header = 0x6A;
         // 线速度 m/s
@@ -81,14 +79,7 @@ namespace nav_client{
         float linear_vy;
         float linear_vz;
         // 旋转角速度 rad/s
-        float angular_vx;
-        float angular_vy;
         float angluar_vz;
-        // 欧拉角
-        float twist_v_yaw;
-        float twist_v_roll;
-        float twist_v_pitch;
-
     }__attribute__((packed));
 //
     inline ReceivePacket fromVector(const std::vector<uint8_t> & data){

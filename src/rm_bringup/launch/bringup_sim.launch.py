@@ -13,6 +13,7 @@ from launch.conditions import LaunchConfigurationEquals, LaunchConfigurationNotE
 def generate_launch_description():
     # Get the launch directory
     bringup_dir = get_package_share_directory('nav_bringup')
+    # 使用北极熊战队的gazebo 仿真
     pb_rm_simulation_launch_dir = os.path.join(get_package_share_directory('pb_rm_simulation'), 'launch')
     navigation2_launch_dir = os.path.join(get_package_share_directory('rm_navigation'), 'launch')
 

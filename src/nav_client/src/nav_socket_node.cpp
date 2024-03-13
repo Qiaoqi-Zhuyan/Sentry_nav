@@ -160,16 +160,9 @@ namespace nav_client {
             packet.linear_vx = nav_msg->linear.x;
             packet.linear_vy = nav_msg->linear.y;
             packet.linear_vz = nav_msg->linear.z;
-            packet.angular_vx = nav_msg->angular.x;
-            packet.angular_vy = nav_msg->angular.y;
             packet.angluar_vz = nav_msg->angular.z;
-            packet.twist_v_yaw = nav_msg->angular.z;
-            packet.twist_v_pitch = nav_msg->angular.y;
-            packet.twist_v_roll = 0.0f;
 
             std::vector<uint8_t> send_data = toVectorTwist(packet);
-
-
 
             // socket send
             bzero(buffer_, BUFFER_SIZE);
