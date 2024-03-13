@@ -1,3 +1,6 @@
 *.pcd
 map/
 src/rm_simulation/
+install/
+build/
+log/
