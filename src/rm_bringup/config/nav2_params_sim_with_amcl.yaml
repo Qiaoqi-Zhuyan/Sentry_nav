@@ -120,23 +120,31 @@ controller_server:
       xy_goal_tolerance: 0.25
       yaw_goal_tolerance: 0.25
     # DWB parameters
+
+#
+#    max_velocity: [ 0.114, 0.114, 5.14 ]
+#    min_velocity: [ -0.114, -0.114, -5.14 ]
+#    max_accel: [ 0.05, 0.05, 2.14 ]
+#    max_decel: [ -0.05, -0.05, -2.14 ]
+
+
     FollowPath:
       plugin: "dwb_core::DWBLocalPlanner"
       debug_trajectory_details: False
-      min_vel_x: -0.5
-      min_vel_y: -0.5
-      max_vel_x: 0.5
-      max_vel_y: 0.5
-      max_vel_theta: 5.0
-      min_speed_xy: -0.5
-      max_speed_xy: 0.5
-      min_speed_theta: -0.5
-      acc_lim_x: 0.9
-      acc_lim_y: 0.9
-      acc_lim_theta: 0.9
-      decel_lim_x: -5.0
-      decel_lim_y: -5.0
-      decel_lim_theta: -15.0
+      min_vel_x: -2.5
+      min_vel_y: -2.5
+      max_vel_x: 2.5
+      max_vel_y: 2.5
+      max_vel_theta: 7.5
+      min_speed_xy: -2.5
+      max_speed_xy: 2.5
+      min_speed_theta: -7.5
+      acc_lim_x: 1.00
+      acc_lim_y: 1.00
+      acc_lim_theta: 7.5
+      decel_lim_x: -1.00
+      decel_lim_y: -1.00
+      decel_lim_theta: -7.5
       vx_samples: 15
       vy_samples: 15
       vtheta_samples: 20
@@ -365,14 +373,29 @@ waypoint_follower:
 velocity_smoother:
   ros__parameters:
     use_sim_time: True
-    smoothing_frequency: 5.0
+    smoothing_frequency: 30.0
     scale_velocities: False
     feedback: "CLOSED_LOOP"
-    max_velocity: [2.5, 2.5, 12.0]
-    min_velocity: [-2.5, -2.5, -12.0]
-    max_accel: [5.0, 5.0, 15.0]
-    max_decel: [-5.0, -5.0, -15.0]
+    max_velocity: [2.5, 2.5, 7.5]
+    min_velocity: [-2.5, -2.5, -7.5]
+    max_accel: [5.0, 5.0, 12.0]
+    max_decel: [-5.0, -5.0, -12.0]
     odom_topic: "Odometry"
     odom_duration: 0.1
     deadband_velocity: [0.0, 0.0, 0.0]
     velocity_timeout: 1.0
+
+#    min_vel_x: -0.25
+#    min_vel_y: -0.25
+#    max_vel_x: 0.25
+#    max_vel_y: 0.25
+#    max_vel_theta: 7.5
+#    min_speed_xy: -0.25
+#    max_speed_xy: 0.25
+#    min_speed_theta: -7.5
+#    acc_lim_x: 0.15
+#    acc_lim_y: 0.15
+#    acc_lim_theta: 7.5
+#    decel_lim_x: -0.15
+#    decel_lim_y: -0.15
+#    decel_lim_theta: -7.5

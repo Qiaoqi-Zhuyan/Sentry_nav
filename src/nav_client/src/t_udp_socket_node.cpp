@@ -45,14 +45,14 @@ namespace nav_client {
             packet.header = 0x6A;
             packet.linear_vx = nav_msg->linear.x;
             packet.linear_vy = nav_msg->linear.y;
-            packet.linear_vz = nav_msg->linear.z;
-            packet.angluar_vz = nav_msg->angular.z;
+            packet.angular = nav_msg->angular.z;
+            packet.v_yaw = nav_msg->angular.z;
 
             // socket send
             bzero(buffer_, BUFFER_SIZE);
 
-            RCLCPP_INFO(this->get_logger(), "linaer x: %f, %f %f", packet.linear_vx, packet.linear_vy,
-                        packet.linear_vz);
+//            RCLCPP_INFO(this->get_logger(), "linaer x: %f, %f %f", packet.linear_vx, packet.linear_vy,
+//                        packet.linear_vz);
 
             socklen_t serv_addr_len = sizeof(serv_addr_in_);
 

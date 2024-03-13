@@ -12,11 +12,17 @@ from launch.conditions import LaunchConfigurationEquals, LaunchConfigurationNotE
 def generate_launch_description():
     # Get the launch directory
     bringup_dir = get_package_share_directory('nav_bringup')
-    rm_vision_launch_dir = os.path.join(get_package_share_directory('nav_vision_bringup'), 'launch')
+    rm_vision_launch_dir = os.path.join(get_package_share_directory('rm_vision_bringup'), 'launch')
+    vision_client_dir = os.path.join(get_package_share_directory('nav_client'), 'launch')
 
     start_rm_vision = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(rm_vision_launch_dir, 'vision_bringup.launch.py'))
     )
+
+    start_vision_client = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(vision_client_dir, 'vision_client_bringup.launch.py'))
+    )
+
 
 
     ld = LaunchDescription()
@@ -24,5 +30,6 @@ def generate_launch_description():
     # Declare the launch options
 
     ld.add_action(start_rm_vision)
+    # ld.add_action(start_vision_client)
 
     return ld

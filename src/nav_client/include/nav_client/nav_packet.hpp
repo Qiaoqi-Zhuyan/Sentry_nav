@@ -71,15 +71,44 @@ namespace nav_client{
 
     }__attribute__((packed));
 
+
+//    struct Robot_set
+//    {
+//        uint8_t header;
+//        /** chassis_control **/
+//        fp32 vx_set = 0.f;
+//        fp32 vy_set = 0.f;
+//        fp32 wz_set = 0.f;
+//
+//        /** gimbal_control **/
+//        fp32 yaw_set = 0.f;
+//        fp32 pitch_set = 0.f;
+//
+//        /** IMU **/
+//        fp32 ins_yaw = 0.f;
+//        fp32 ins_pitch = 0.f;
+//        fp32 ins_roll = 0.f;
+//        fp32 ins_yaw_v = 0.f;
+//        fp32 ins_pitch_v = 0.f;
+//        fp32 ins_roll_v = 0.f;
+//
+//        /** other **/
+//        fp32 yaw_relative = 0.f;
+//        fp32 pitch_relative = 0.f;
+//        Types::ROBOT_MODE mode = Types::ROBOT_MODE::ROBOT_NO_FORCE;
+//    } __attribute__((packed));
+//
+
     struct SendTwistPacket {
         /*       导航部分       */
         uint8_t header = 0x6A;
         // 线速度 m/s
         float linear_vx;
         float linear_vy;
-        float linear_vz;
+        float angular;
         // 旋转角速度 rad/s
-        float angluar_vz;
+        float v_yaw;
+
     }__attribute__((packed));
 //
     inline ReceivePacket fromVector(const std::vector<uint8_t> & data){

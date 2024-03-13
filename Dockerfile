@@ -1,11 +1,11 @@
 FROM ros:humble-ros-base
 
 # create workspace
-RUN mkdir -p /sentry_nav/src
+RUN mkdir -p /sentry_nav/
 WORKDIR /sentry_nav/
 
 # clone projects
-RUN cd src && git clone https://github.com/sentry_nav/ --depth=1 &&
+RUN git clone https://github.com/sentry_nav/ --depth=1 &&
 # install dependencies and some tools
 RUN sudo apt install -y ros-humble-gazebo-* && \
     sudo apt install -y ros-humble-xacro && \

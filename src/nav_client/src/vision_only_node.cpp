@@ -30,8 +30,8 @@ namespace nav_client {
             else
                 RCLCPP_INFO(this->get_logger(), "create socket fd");
 
-            serv_port_ = declare_parameter("serv_port", 8080);
-            serv_ip_ = declare_parameter("serv_ip", "127.0.0.1");
+            serv_port_ = declare_parameter("serv_port", 51718);
+            serv_ip_ = declare_parameter("serv_ip", "192.168.123.110");
 
             serv_addr_.sin_family = AF_INET;
             serv_addr_.sin_addr.s_addr = inet_addr(serv_ip_.c_str());
@@ -54,6 +54,7 @@ namespace nav_client {
         detector_param_client_ = std::make_shared<rclcpp::AsyncParametersClient>(this, "nav_armor_detector");
         // 可视化发送信息
         recv_pub_ = this->create_publisher<nav_auto_aim_interfaces::msg::DebugRecvData>("/receive", 10);
+        latency_pub_ = this->create_publisher<std_msgs::msg::Float64>("/latency", 10);
 
         // tracker reset service client
         reset_tracker_client_ = this->create_client<std_srvs::srv::Trigger>("/tracker/reset");

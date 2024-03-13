@@ -159,8 +159,8 @@ namespace nav_client {
             packet.header = 0x6A;
             packet.linear_vx = nav_msg->linear.x;
             packet.linear_vy = nav_msg->linear.y;
-            packet.linear_vz = nav_msg->linear.z;
-            packet.angluar_vz = nav_msg->angular.z;
+            packet.angular = nav_msg->angular.z;
+            packet.v_yaw = nav_msg->angular.z;
 
             std::vector<uint8_t> send_data = toVectorTwist(packet);
 
