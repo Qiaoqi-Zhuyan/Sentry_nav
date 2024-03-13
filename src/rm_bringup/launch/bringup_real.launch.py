@@ -12,7 +12,7 @@ from launch.conditions import LaunchConfigurationEquals, LaunchConfigurationNotE
 def generate_launch_description():
     # Get the launch directory
     bringup_dir = get_package_share_directory('nav_bringup')
-    pb_rm_simulation_launch_dir = os.path.join(get_package_share_directory('pb_rm_simulation'), 'launch')
+    robot_urdf_launch_dir = os.path.join(get_package_share_directory('robot_description'), 'launch')
     navigation2_launch_dir = os.path.join(get_package_share_directory('rm_navigation'), 'launch')
 
     # Create the launch configuration variables
@@ -97,7 +97,7 @@ def generate_launch_description():
     )
 
     start_robot_description = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(pb_rm_simulation_launch_dir, 'rm_real.launch.py')),
+        PythonLaunchDescriptionSource(os.path.join(robot_urdf_launch_dir, 'rm_description_bringup.launch.py')),
         launch_arguments={'rviz': use_rviz}.items()
     )
 
