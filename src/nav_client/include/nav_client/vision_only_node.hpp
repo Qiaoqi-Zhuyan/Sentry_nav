@@ -57,10 +57,9 @@ namespace nav_client{
 
         // socket param
         int64_t client_socket_fd;
-        uint16_t port_no_; // 服务器程序端口、IP
+        uint16_t serv_port_; // 服务器程序端口、IP
         std::string serv_ip_;
-        struct sockaddr_in serv_addr_, cli_addr_;
-        struct hostent *server_;
+        struct sockaddr_in serv_addr_;
         char buffer_[BUFFER_SIZE];
         int64_t send_data_cunt_ = 0, recv_data_cunt_ = 0;
 

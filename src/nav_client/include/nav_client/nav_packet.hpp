@@ -90,7 +90,7 @@ namespace nav_client{
         float twist_v_pitch;
 
     }__attribute__((packed));
-
+//
     inline ReceivePacket fromVector(const std::vector<uint8_t> & data){
         ReceivePacket packet;
         std::copy(data.begin(), data.end(), reinterpret_cast<uint8_t *>(&packet));
@@ -119,6 +119,11 @@ namespace nav_client{
         for (size_t i =0; i < sizeof (data); i++)
             buffer_[i] = *((uint8_t *)&data + i);
 
+    }
+
+    inline void pack(const SendGimbalPacket &data, char* buffer_){
+        for (size_t i = 0; i < sizeof (data); i++)
+            buffer_[i] = *((uint8_t *)&data + i);
     }
 
     inline void unpack(const ReceivePacket &data, char* buffer_){

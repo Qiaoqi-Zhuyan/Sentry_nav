@@ -19,32 +19,25 @@
 #include "vector"
 
 namespace nav_client {
-    VisionClient::VisionClient(const rclcpp::NodeOptions &options) : Node("nav_client_node", options) {
+    VisionClient::VisionClient(const rclcpp::NodeOptions &options) : Node("vision_client_node", options) {
 
 
         //set socket
         try {
-            client_socket_fd = socket(AF_INET, SOCK_STREAM, 0);
+            client_socket_fd = socket(AF_INET, SOCK_DGRAM, 0);
             if (client_socket_fd < 0)
-                RCLCPP_ERROR(this->get_logger(), "Error open socket");
-            port_no_ = declare_parameter("port", 8080);
-            serv_ip_ = declare_parameter("ip", "127.0.0.1");
-//            serv_addr_.sin_family = AF_INET;
-//            serv_addr_.sin_addr.s_addr = inet_addr(serv_ip_.c_str());
-//            serv_addr_.sin_port = htons(port_no_);
-
-            server_ = gethostbyname(serv_ip_.c_str());
-            bzero((char *)&serv_addr_, sizeof (serv_addr_));
-            serv_addr_.sin_family = AF_INET;
-            bcopy((char *)server_->h_addr, (char *)&serv_addr_.sin_addr.s_addr, server_->h_length);
-            serv_addr_.sin_port = htons(port_no_);
-
-            int n_connect = connect(client_socket_fd, (struct sockaddr *) &serv_addr_, sizeof(serv_addr_));
-
-            if (n_connect < 0)
-                RCLCPP_ERROR(this->get_logger(), "Error connect server");
+                RCLCPP_ERROR(this->get_logger(), "Error create socket fd");
             else
-                RCLCPP_INFO(this->get_logger(), "Connect server: %s", serv_ip_.c_str());
+                RCLCPP_INFO(this->get_logger(), "create socket fd");
+
+            serv_port_ = declare_parameter("serv_port", 8080);
+            serv_ip_ = declare_parameter("serv_ip", "127.0.0.1");
+
+            serv_addr_.sin_family = AF_INET;
+            serv_addr_.sin_addr.s_addr = inet_addr(serv_ip_.c_str());
+            serv_addr_.sin_port = htons(serv_port_);
+
+            RCLCPP_INFO(get_logger(), "send to %s:%d", serv_ip_.c_str(), serv_port_);
 
         } catch (const std::exception &ex) {
             RCLCPP_ERROR(this->get_logger(), "Socket Error: %s", ex.what());
@@ -125,7 +118,7 @@ namespace nav_client {
             packet.r2 = target_msg->radius_2;
             packet.dz = target_msg->dz;
 
-            std::vector<uint8_t> send_data = toVectorGimbal(packet);
+//            std::vector<uint8_t> send_data = toVectorGimbal(packet);
 
             std_msgs::msg::Float64 latency;
             latency.data = (this->now() - target_msg->header.stamp).seconds() * 1000.0f;
@@ -135,42 +128,62 @@ namespace nav_client {
 
             // socket send
             bzero(buffer_, BUFFER_SIZE);
+            socklen_t serv_addr_len = sizeof (serv_addr_);
 
-            for (size_t i = 0; i < sizeof (send_data); i++)
-                buffer_[i] = send_data[i];
+            pack(packet, buffer_);
 
-            int n_send = send(client_socket_fd, buffer_, sizeof (buffer_), 0);
-            if (n_send < 0)
+            int n_sendto = sendto(client_socket_fd, (const char *)buffer_, sizeof (packet), MSG_CONFIRM,(struct sockaddr *) &serv_addr_, serv_addr_len);
+
+            if (n_sendto < 0)
                 RCLCPP_ERROR(get_logger(), "Error Send");
             else
                 RCLCPP_INFO(this->get_logger(), "Send data %ld to %s", ++send_data_cunt_, serv_ip_.c_str());
 
         } catch (const std::exception &ex) {
             RCLCPP_ERROR(get_logger(), "Error: %s", ex.what());
-
         }
 
     }
 
     void VisionClient::receiveData() {
-        std::vector<uint8_t> recvData;
-        recvData.reserve(sizeof(ReceivePacket));
+//        std::vector<uint8_t> recvData;
+//        recvData.reserve(sizeof(ReceivePacket));
 
         while (rclcpp::ok()) {
             try {
 
                 bzero(buffer_, BUFFER_SIZE);
-                int n_read = (client_socket_fd, buffer_, BUFFER_SIZE);
+                socklen_t serv_addr_len = sizeof (serv_addr_);
+                int n_recvfrom = recvfrom(client_socket_fd, buffer_, BUFFER_SIZE, MSG_WAITALL, (struct sockaddr *)&serv_addr_, &serv_addr_len);
 
-                if (n_read < 0)
+                if (n_recvfrom < 0)
                     RCLCPP_ERROR(this->get_logger(), "Error reading from server");
                 else
                     RCLCPP_INFO(this->get_logger(), "Reading data %ld from server %s", ++recv_data_cunt_, serv_ip_.c_str());
+//
+//                for(int i = 0; i < sizeof (buffer_); i++)
+//                    recvData[i] = buffer_[i];
+//
+//                ReceivePacket recvPacket = fromVector(recvData);
 
-                for(int i = 0; i < sizeof (buffer_); i++)
-                    recvData[i] = buffer_[i];
+                ReceivePacket recvPacket;
+                unpack(recvPacket, buffer_);
 
-                ReceivePacket recvPacket = fromVector(recvData);
+                // 电控数据可视化发布
+                recv_data_.aim_x = recvPacket.aim_x;
+                recv_data_.aim_y = recvPacket.aim_y;
+                recv_data_.aim_z = recvPacket.aim_z;
+                recv_data_.yaw = recvPacket.yaw;
+                recv_data_.pitch = recvPacket.pitch;
+                recv_data_.roll = recvPacket.roll;
+                recv_data_.reset_tracker = recvPacket.reset_tracker;
+                recv_data_.reserved = recvPacket.reserved;
+                recv_data_.detect_color = recvPacket.detect_color;
+
+                recv_pub_->publish(recv_data_);
+
+
+                // 数据处理
                 setParam(rclcpp::Parameter("detect_color", recvPacket.detect_color));
                 detect_color_ = recvPacket.detect_color;
 
@@ -199,17 +212,6 @@ namespace nav_client {
                 }
 
 
-                recv_data_.aim_x = recvPacket.aim_x;
-                recv_data_.aim_y = recvPacket.aim_y;
-                recv_data_.aim_z = recvPacket.aim_z;
-                recv_data_.yaw = recvPacket.yaw;
-                recv_data_.pitch = recvPacket.pitch;
-                recv_data_.roll = recvPacket.roll;
-                recv_data_.reset_tracker = recvPacket.reset_tracker;
-                recv_data_.reserved = recvPacket.reserved;
-                recv_data_.detect_color = recvPacket.detect_color;
-
-                recv_pub_->publish(recv_data_);
 
 
 
