@@ -1,0 +1,11 @@
+/socket_param:
+  ros__parameters:
+    port: 51717
+    ip: "192.168.123.110"
+
+
+/test_udp_sender:
+  ros__parameters:
+    serv_port: 51718
+    serv_ip: "192.168.123.110"
+
