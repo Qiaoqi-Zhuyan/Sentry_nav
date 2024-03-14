@@ -1,6 +1,12 @@
 //
 // Created by shuxy on 24-3-9.
 //
+/*
+ *
+ * 使用tcp not used
+ *
+ *
+ */
 
 #include "nav_client/test_nav_socket_node.hpp"
 

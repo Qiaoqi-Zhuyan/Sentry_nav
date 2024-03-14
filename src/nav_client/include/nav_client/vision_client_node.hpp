@@ -1,6 +1,10 @@
 //
-// Created by shuxy on 24-3-9.
+// Created by shuxy on 24-3-14.
 //
+
+#ifndef BUILD_VISION_CLIENT_NODE_HPP
+#define BUILD_VISION_CLIENT_NODE_HPP
+
 
 // ros2
 #include "rclcpp/rclcpp.hpp"
@@ -35,21 +39,25 @@
 #include "nav_auto_aim_interfaces/msg/target.hpp"
 #include "nav_auto_aim_interfaces/msg/debug_recv_data.hpp"
 
+
+
 namespace nav_client{
 #define BUFFER_SIZE 256
+    class VisionClientNode : public rclcpp::Node
+    {
+    public:
+        explicit VisionClientNode(const rclcpp::NodeOptions & options);
 
-
-    class VisionClient : public rclcpp::Node {
-    public :
-        explicit VisionClient(const rclcpp::NodeOptions & options);
-        ~VisionClient();
+        ~VisionClientNode() override;
 
     private:
         void getParams();
 
         void receiveData();
 
-        void sendGimbalData(nav_auto_aim_interfaces::msg::Target::SharedPtr target_msg);
+        void sendData(nav_auto_aim_interfaces::msg::Target::SharedPtr msg);
+
+        void reopenPort();
 
         void setParam(const rclcpp::Parameter & param);
 
@@ -63,39 +71,33 @@ namespace nav_client{
         char buffer_[BUFFER_SIZE];
         int64_t send_data_cunt_ = 0, recv_data_cunt_ = 0;
 
-        // detector param
+        // Param client to set detect_colr
         using ResultFuturePtr = std::shared_future<std::vector<rcl_interfaces::msg::SetParametersResult>>;
         bool initial_set_param_ = false;
-        uint8_t previous_detect_color_ = 0;
+        uint8_t previous_receive_color_ = 0;
         rclcpp::AsyncParametersClient::SharedPtr detector_param_client_;
         ResultFuturePtr set_param_future_;
 
-        // service client to reset tracker
+        // Service client to reset tracker
         rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr reset_tracker_client_;
 
-        // tf 坐标系转化 yaw, pitch -> robot_state_publisher -> odom -> gimbal_link
-        double timeStamp_offset_ = 0;
-        std::unique_ptr<tf2_ros::TransformBroadcaster> tf2_broadcaster_;
+        // Aimimg point receiving from serial port for visualization
+        visualization_msgs::msg::Marker aiming_point_;
 
-        // 订阅nav_aim_tracker
+        // Broadcast tf from odom to gimbal_link
+        double timestamp_offset_ = 0;
+        std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
+
         rclcpp::Subscription<nav_auto_aim_interfaces::msg::Target>::SharedPtr target_sub_;
-        // 订阅nav2 cmd_vel
-        rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr twist_sub_;
 
-        // debug message
+        // For debug usage
         rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr latency_pub_;
         rclcpp::Publisher<visualization_msgs::msg::Marker>::SharedPtr marker_pub_;
-        rclcpp::Publisher<nav_auto_aim_interfaces::msg::DebugRecvData >::SharedPtr recv_pub_;
-
-        // aiming point 可视化
-        visualization_msgs::msg::Marker aiming_point_;
-        // 接受信息可视化
-        nav_auto_aim_interfaces::msg::DebugRecvData recv_data_;
 
         std::thread receive_thread_;
-
     };
+
 
 }
 
-
+#endif //BUILD_VISION_CLIENT_NODE_HPP

@@ -186,7 +186,7 @@ namespace nav_client {
 
                 // 数据处理
                 setParam(rclcpp::Parameter("detect_color", recvPacket.detect_color));
-                detect_color_ = recvPacket.detect_color;
+                previous_detect_color_ = recvPacket.detect_color;
 
                 if (recvPacket.reset_tracker)
                     resetTracker();

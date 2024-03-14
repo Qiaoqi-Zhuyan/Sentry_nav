@@ -18,34 +18,33 @@ find_package(rclcpp_components REQUIRED)
 
 ament_auto_find_build_dependencies()
 
-
-rclcpp_components_register_node(${PROJECT_NAME}
-        PLUGIN nav_client::NavClient
-        EXECUTABLE nav_client_node
+ament_auto_add_library(${PROJECT_NAME} SHARED
+        DIRECTORY
+        src
+        src/vision_client_node.cpp
 )
+
+
+#rclcpp_components_register_node(${PROJECT_NAME}
+#        PLUGIN nav_client::NavClient
+#        EXECUTABLE nav_client_node
+#)
 
 rclcpp_components_register_node(${PROJECT_NAME}
         PLUGIN nav_client::VisionClient
         EXECUTABLE vision_client_node
 )
 
-rclcpp_components_register_node(${PROJECT_NAME}
-        PLUGIN nav_client::TestNavSocket
-        EXECUTABLE test_nav_socket_node
-)
+#rclcpp_components_register_node(${PROJECT_NAME}
+#        PLUGIN nav_client::TestNavSocket
+#        EXECUTABLE test_nav_socket_node
+#)
 
 rclcpp_components_register_node(${PROJECT_NAME}
         PLUGIN nav_client::UDPSender
         EXECUTABLE test_udp_sender
 )
 
-
-
-
-ament_auto_add_library(${PROJECT_NAME} SHARED
-        DIRECTORY
-        src
-)
 
 
 if(BUILD_TESTING)
