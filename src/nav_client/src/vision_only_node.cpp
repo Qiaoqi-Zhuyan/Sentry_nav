@@ -51,7 +51,7 @@ namespace nav_client {
         tf2_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(*this);
 
         marker_pub_ = this->create_publisher<visualization_msgs::msg::Marker>("/aiming_point", 10);
-        detector_param_client_ = std::make_shared<rclcpp::AsyncParametersClient>(this, "nav_armor_detector");
+        detector_param_client_ = std::make_shared<rclcpp::AsyncParametersClient>(this, "armor_detector");
         // 可视化发送信息
         recv_pub_ = this->create_publisher<auto_aim_interfaces::msg::DebugRecvData>("/receive", 10);
         latency_pub_ = this->create_publisher<std_msgs::msg::Float64>("/latency", 10);
