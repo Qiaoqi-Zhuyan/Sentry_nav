@@ -53,7 +53,7 @@ namespace nav_client {
         marker_pub_ = this->create_publisher<visualization_msgs::msg::Marker>("/aiming_point", 10);
         detector_param_client_ = std::make_shared<rclcpp::AsyncParametersClient>(this, "nav_armor_detector");
         // 可视化发送信息
-        recv_pub_ = this->create_publisher<nav_auto_aim_interfaces::msg::DebugRecvData>("/receive", 10);
+        recv_pub_ = this->create_publisher<auto_aim_interfaces::msg::DebugRecvData>("/receive", 10);
         latency_pub_ = this->create_publisher<std_msgs::msg::Float64>("/latency", 10);
 
         // tracker reset service client
@@ -72,7 +72,7 @@ namespace nav_client {
 
 
         // 自瞄 tracker 订阅
-        target_sub_ = this->create_subscription<nav_auto_aim_interfaces::msg::Target>(
+        target_sub_ = this->create_subscription<auto_aim_interfaces::msg::Target>(
                 "/tracker/target", rclcpp::SensorDataQoS(),
                 std::bind(&VisionClient::sendGimbalData, this, std::placeholders::_1)
         );
@@ -86,7 +86,7 @@ namespace nav_client {
     }
 
 
-    void VisionClient::sendGimbalData(nav_auto_aim_interfaces::msg::Target::SharedPtr target_msg) {
+    void VisionClient::sendGimbalData(auto_aim_interfaces::msg::Target::SharedPtr target_msg) {
 
         const static std::map<std::string, uint8_t> id_uint8_map{
                 {"",        0},

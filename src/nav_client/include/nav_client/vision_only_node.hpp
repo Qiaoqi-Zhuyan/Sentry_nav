@@ -32,8 +32,8 @@
 
 //nav interface
 #include "nav_client/nav_packet.hpp"
-#include "nav_auto_aim_interfaces/msg/target.hpp"
-#include "nav_auto_aim_interfaces/msg/debug_recv_data.hpp"
+#include "auto_aim_interfaces/msg/target.hpp"
+#include "auto_aim_interfaces/msg/debug_recv_data.hpp"
 
 namespace nav_client{
 #define BUFFER_SIZE 256
@@ -49,7 +49,7 @@ namespace nav_client{
 
         void receiveData();
 
-        void sendGimbalData(nav_auto_aim_interfaces::msg::Target::SharedPtr target_msg);
+        void sendGimbalData(auto_aim_interfaces::msg::Target::SharedPtr target_msg);
 
         void setParam(const rclcpp::Parameter & param);
 
@@ -78,19 +78,19 @@ namespace nav_client{
         std::unique_ptr<tf2_ros::TransformBroadcaster> tf2_broadcaster_;
 
         // 订阅nav_aim_tracker
-        rclcpp::Subscription<nav_auto_aim_interfaces::msg::Target>::SharedPtr target_sub_;
+        rclcpp::Subscription<auto_aim_interfaces::msg::Target>::SharedPtr target_sub_;
         // 订阅nav2 cmd_vel
         rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr twist_sub_;
 
         // debug message
         rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr latency_pub_;
         rclcpp::Publisher<visualization_msgs::msg::Marker>::SharedPtr marker_pub_;
-        rclcpp::Publisher<nav_auto_aim_interfaces::msg::DebugRecvData >::SharedPtr recv_pub_;
+        rclcpp::Publisher<auto_aim_interfaces::msg::DebugRecvData >::SharedPtr recv_pub_;
 
         // aiming point 可视化
         visualization_msgs::msg::Marker aiming_point_;
         // 接受信息可视化
-        nav_auto_aim_interfaces::msg::DebugRecvData recv_data_;
+        auto_aim_interfaces::msg::DebugRecvData recv_data_;
 
         std::thread receive_thread_;
 

@@ -21,7 +21,6 @@ ament_auto_find_build_dependencies()
 ament_auto_add_library(${PROJECT_NAME} SHARED
         DIRECTORY
         src
-        src/vision_client_node.cpp
 )
 
 

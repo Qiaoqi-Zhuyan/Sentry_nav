@@ -36,7 +36,7 @@
 
 //nav interface
 #include "nav_client/nav_packet.hpp"
-#include "nav_auto_aim_interfaces/msg/target.hpp"
+#include "auto_aim_interfaces/msg/target.hpp"
 #include "nav_interfaces/msg/socket_msg.hpp"
 
 namespace nav_client{
