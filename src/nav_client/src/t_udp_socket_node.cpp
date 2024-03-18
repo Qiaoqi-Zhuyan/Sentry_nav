@@ -7,8 +7,7 @@
 namespace nav_client {
 
     UDPSender::UDPSender(const rclcpp::NodeOptions &nodeOptions) : Node("test_udp_sender") {
-
-
+        
         // socket init
         client_socket_fd = socket(AF_INET, SOCK_DGRAM, 0);
         if (client_socket_fd < 0)
@@ -29,8 +28,6 @@ namespace nav_client {
                 "/cmd_vel_nav", rclcpp::SensorDataQoS(),
                 std::bind(&UDPSender::twistSender, this, std::placeholders::_1)
         );
-
-
     }
 
 
@@ -68,7 +65,6 @@ namespace nav_client {
                     serv_addr_len);
 
             perror("");
-            printf("%d", n_sendto);
             if (n_sendto < 0)
                 RCLCPP_ERROR(get_logger(), "ERROR sending ");
             else
