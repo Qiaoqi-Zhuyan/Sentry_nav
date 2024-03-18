@@ -1,5 +1,5 @@
-colcon build --symlink-install
-cmds=(  "ros2 launch nav_bringup bringup_real.launch.py rviz:=true world:=scant mode:=mapping"
+cmds=( "ros2 launch foxglove_bridge foxglove_bridge_launch.xml"
+       "foxglove-studio"
 )
 
 
@@ -15,3 +15,4 @@ done
 #ros2 launch rm_bringup bringup_real.launch.py world:= mode:=nav localization:=amcl
 
 #  "ros2 launch nav_bringup bringup_real.launch.py rviz:=true world:=scan3 mode:=nav localization:=amcl "
+

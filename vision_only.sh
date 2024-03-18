@@ -1,7 +1,5 @@
 #colcon build --symlink-install
 cmds=(  "ros2 launch nav_bringup bringup_vision.launch.py"
-	"ros2 launch foxglove_bridge foxglove_bridge_launch.xml"
-	"foxglove-studio"
 )
 
 

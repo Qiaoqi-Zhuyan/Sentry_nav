@@ -19,6 +19,7 @@
   <depend>auto_aim_interfaces</depend>
   <depend>std_srvs</depend>
   <depend>nav_interfaces</depend>
+<!--  <depend>backward_ros</depend>-->
 
   <buildtool_depend>launch_ros</buildtool_depend>
   <exec_depend>launch_ros</exec_depend>

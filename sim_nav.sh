@@ -1,7 +1,5 @@
 #colcon build --symlink-install
 cmds=(  "ros2 launch nav_bringup bringup_sim.launch.py world:=RMUL mode:=mapping"
-	"ros2 launch foxglove_bridge foxglove_bridge_launch.xml"
-	"foxglove-studio"
 )
 
 
@@ -14,7 +12,6 @@ done
 
 
 #icp amcl slam_toolbox
-
 
 # ros2 launch rm_bringup bringup_sim.launch.py world:=RMUL mode:=mapping
 

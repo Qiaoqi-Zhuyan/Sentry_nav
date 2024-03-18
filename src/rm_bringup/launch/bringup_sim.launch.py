@@ -28,7 +28,7 @@ def generate_launch_description():
     slam_toolbox_mapping_file_dir = os.path.join(bringup_dir, 'config', 'mapper_params_online_async.yaml')
 
     nav2_map_dir = PathJoinSubstitution([bringup_dir, 'map', world]), ".yaml"
-    nav2_params_file_dir = os.path.join(bringup_dir, 'config', 'nav2_params_sim_with_amcl.yaml')
+    nav2_params_file_dir = os.path.join(bringup_dir, 'config', 'nav2_params_origin_teb.yaml')
 
     icp_pcd_dir = PathJoinSubstitution([bringup_dir, 'PCD', world]), ".pcd"
     icp_node_params_dir = os.path.join(bringup_dir, 'config', 'icp_node_params.yaml')

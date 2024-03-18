@@ -26,7 +26,7 @@ namespace nav_client {
         RCLCPP_INFO(this->get_logger(), "send data to server: %s : %d", serv_ip_.c_str(), serv_port_);
 
         nav_sub_ = this->create_subscription<geometry_msgs::msg::Twist>(
-                "/cmd_vel", rclcpp::SensorDataQoS(),
+                "/cmd_vel_nav", rclcpp::SensorDataQoS(),
                 std::bind(&UDPSender::twistSender, this, std::placeholders::_1)
         );
 
@@ -88,15 +88,18 @@ namespace nav_client {
                 bzero(buffer_, BUFFER_SIZE);
                 struct sockaddr_in serv_addr_in;
                 socklen_t serv_addr_in_len = sizeof(serv_addr_in);
-                int n_recvfrom = recvfrom(client_socket_fd, buffer_, BUFFER_SIZE, MSG_WAITALL,
-                                          (struct sockaddr *) &serv_addr_in, &serv_addr_in_len);
-
+                int n_recvfrom = recvfrom(client_socket_fd,
+                                          buffer_,
+                                          BUFFER_SIZE,
+                                          MSG_WAITALL,
+                                          (struct sockaddr *) &serv_addr_in,
+                                                  &serv_addr_in_len);
 
                 if (n_recvfrom < 0)
                     RCLCPP_ERROR(this->get_logger(), "Error reading from server");
                 else {
                     RCLCPP_INFO(this->get_logger(), "Reading data from server: %s", serv_ip_.c_str());
-                    RCLCPP_INFO(this->get_logger(), "receive: %s", buffer_);
+                    RCLCPP_INFO(this->get_logger(), "receive  buffer size : %d",n_recvfrom);
                 }
                 unpack(recvData, buffer_);
 //                RCLCPP_INFO(this->get_logger(), "aim_x: %f, aim_y: %f, aim_z: %f", recvData.aim_x, recvData.aim_y, recvData.aim_z);

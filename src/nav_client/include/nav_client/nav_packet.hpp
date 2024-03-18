@@ -29,7 +29,6 @@ namespace nav_client{
 
     struct ReceivePacket{
 
-
         uint8_t detect_color; // 敌方装甲板 0 red, 1 blue
         bool reset_tracker; //
         uint8_t reserved;

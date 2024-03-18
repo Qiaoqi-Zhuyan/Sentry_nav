@@ -12,8 +12,9 @@ from launch.conditions import LaunchConfigurationEquals, LaunchConfigurationNotE
 def generate_launch_description():
     # Get the launch directory
     bringup_dir = get_package_share_directory('nav_bringup')
-    robot_urdf_launch_dir = os.path.join(get_package_share_directory('robot_description'), 'launch')
+    robot_urdf_launch_dir = os.path.join(get_package_share_directory('pb_rm_simulation'), 'launch')
     navigation2_launch_dir = os.path.join(get_package_share_directory('rm_navigation'), 'launch')
+    nav2_client_launch_dir = os.path.join(get_package_share_directory('nav_client'), 'launch')
 
     # Create the launch configuration variables
     world = LaunchConfiguration('world')
@@ -97,7 +98,7 @@ def generate_launch_description():
     )
 
     start_robot_description = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(robot_urdf_launch_dir, 'rm_description_bringup.launch.py')),
+        PythonLaunchDescriptionSource(os.path.join(robot_urdf_launch_dir, 'rm_real.launch.py')),
         launch_arguments={'rviz': use_rviz}.items()
     )
 
@@ -189,6 +190,10 @@ def generate_launch_description():
             'rviz': use_rviz}.items()
     )
 
+    start_udp_sender = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(nav2_client_launch_dir, 'udp_sender_bringup.launch.py'))
+    )
+
     ld = LaunchDescription()
 
     # Declare the launch options
@@ -204,5 +209,6 @@ def generate_launch_description():
     ld.add_action(start_localization_group)
     ld.add_action(start_mapping)
     ld.add_action(start_navigation2)
+    ld.add_action(start_udp_sender)
 
     return ld

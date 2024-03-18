@@ -55,13 +55,19 @@ namespace nav_client{
 
         void resetTracker();
 
+        void twistSender(geometry_msgs::msg::Twist::SharedPtr nav_msg);
+
         // socket param
         int64_t client_socket_fd;
         uint16_t serv_port_; // 服务器程序端口、IP
         std::string serv_ip_;
         struct sockaddr_in serv_addr_;
-        char buffer_[BUFFER_SIZE];
+        char buffer_send[BUFFER_SIZE];
+        char buffer_recv[BUFFER_SIZE];
+        char buffer_twist[BUFFER_SIZE];
         int64_t send_data_cunt_ = 0, recv_data_cunt_ = 0;
+//        struct sockaddr_in client_addr_;
+
 
         // detector param
         using ResultFuturePtr = std::shared_future<std::vector<rcl_interfaces::msg::SetParametersResult>>;
@@ -93,6 +99,8 @@ namespace nav_client{
         auto_aim_interfaces::msg::DebugRecvData recv_data_;
 
         std::thread receive_thread_;
+
+        rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr nav_sub_;
 
     };
 

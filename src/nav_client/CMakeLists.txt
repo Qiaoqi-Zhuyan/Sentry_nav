@@ -7,6 +7,7 @@ endif()
 
 ## Export compile commands for clangd
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+#set(CMAKE_BUILD_TYPE "Debug")
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
@@ -15,6 +16,7 @@ find_package(geometry_msgs REQUIRED)
 
 find_package(ament_cmake_auto REQUIRED)
 find_package(rclcpp_components REQUIRED)
+#find_package(backward_ros REQUIRED)
 
 ament_auto_find_build_dependencies()
 
