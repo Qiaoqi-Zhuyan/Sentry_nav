@@ -95,6 +95,9 @@ bt_navigator_rclcpp_node:
   ros__parameters:
     use_sim_time: False
 
+
+# TEB 控制器参考
+# https://charon-cheung.github.io/2021/06/07/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/TEB%E6%89%80%E6%9C%89%E5%8F%82%E6%95%B0%E5%90%AB%E4%B9%89/#%E8%AF%9D%E9%A2%98
 controller_server:
   ros__parameters:
     use_sim_time: False
@@ -125,22 +128,22 @@ controller_server:
       plugin: teb_local_planner::TebLocalPlannerROS
       teb_autosize: 1.0
       dt_ref: 0.3
-      dt_hysteresis: 0.03
+      dt_hysteresis: 0.06
       max_samples: 500
       global_plan_overwrite_orientation: True
       allow_init_with_backwards_motion: True
-      max_global_plan_lookahead_dist: 0.7
-      global_plan_viapoint_sep: 0.2
-      global_plan_prune_distance: 1.0
-      exact_arc_length: False
+      max_global_plan_lookahead_dist: 1.37
+      global_plan_viapoint_sep: 0.05
+      global_plan_prune_distance: 1.5
+      exact_arc_length: True
       feasibility_check_no_poses: 2
-      publish_feedback: True
+      publish_feedback: False
 
       # Robot
 
-      max_vel_x: 0.5
-      max_vel_x_backwards: 0.5
-      max_vel_y: 0.5
+      max_vel_x: 0.125
+      max_vel_x_backwards: 0.125
+      max_vel_y: 0.125
       max_vel_theta: 9.2
       acc_lim_x: 5.75
       acc_lim_y: 5.75
@@ -157,11 +160,11 @@ controller_server:
 
       # Obstacles
 
-      min_obstacle_dist: 0.5 # This value must also include our robot radius, since footprint_model is set to "point".
+      min_obstacle_dist: 0.32 # This value must also include our robot radius, since footprint_model is set to "point".
       inflation_dist: 0.6
       include_costmap_obstacles: True
       costmap_obstacles_behind_robot_dist: 1.0
-      obstacle_poses_affected: 15
+      obstacle_poses_affected: 30
       costmap_converter_plugin: ""
       costmap_converter_spin_thread: True
       costmap_converter_rate: 8
@@ -191,7 +194,7 @@ controller_server:
       weight_viapoint: 80.0
       weight_adapt_factor: 2.0
       # Homotopy Class Planner
-      enable_homotopy_class_planning: False
+      enable_homotopy_class_planning: True
       enable_multithreading: True
       max_number_classes: 3
       selection_cost_hysteresis: 1.0
@@ -438,20 +441,3 @@ velocity_smoother:
     deadband_velocity: [0.0, 0.0, 0.0]
     velocity_timeout: 1.0
 
-
-
-
-#    min_vel_x: -0.25
-#    min_vel_y: -0.25
-#    max_vel_x: 0.25
-#    max_vel_y: 0.25
-#    max_vel_theta: 7.5
-#    min_speed_xy: -0.25
-#    max_speed_xy: 0.25
-#    min_speed_theta: -7.5
-#    acc_lim_x: 0.15
-#    acc_lim_y: 0.15
-#    acc_lim_theta: 7.5
-#    decel_lim_x: -0.15
-#    decel_lim_y: -0.15
-#    decel_lim_theta: -7.5

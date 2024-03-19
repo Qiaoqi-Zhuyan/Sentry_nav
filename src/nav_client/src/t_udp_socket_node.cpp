@@ -7,7 +7,7 @@
 namespace nav_client {
 
     UDPSender::UDPSender(const rclcpp::NodeOptions &nodeOptions) : Node("test_udp_sender") {
-        
+
         // socket init
         client_socket_fd = socket(AF_INET, SOCK_DGRAM, 0);
         if (client_socket_fd < 0)
@@ -40,8 +40,8 @@ namespace nav_client {
             SendTwistPacket packet;
 
             packet.header = 0x6A;
-            packet.linear_vx = nav_msg->linear.x;
-            packet.linear_vy = nav_msg->linear.y;
+            packet.linear_vx = nav_msg->linear.y;
+            packet.linear_vy = -nav_msg->linear.x;
             packet.angular = nav_msg->angular.z;
             packet.v_yaw = nav_msg->angular.z;
 
