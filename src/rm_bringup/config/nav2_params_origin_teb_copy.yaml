@@ -141,9 +141,9 @@ controller_server:
 
       # Robot
 
-      max_vel_x: 0.125
-      max_vel_x_backwards: 0.125
-      max_vel_y: 0.125
+      max_vel_x: 2.125
+      max_vel_x_backwards: 2.125
+      max_vel_y: 2.125
       max_vel_theta: 9.2
       acc_lim_x: 5.75
       acc_lim_y: 5.75

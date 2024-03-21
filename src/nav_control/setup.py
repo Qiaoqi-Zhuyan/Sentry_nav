@@ -20,6 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'nav_to_pose_sim = nav_control.robot_nav:main'
         ],
     },
 )

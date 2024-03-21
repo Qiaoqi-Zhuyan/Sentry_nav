@@ -2,16 +2,17 @@
 from enum import Enum
 
 # nav2
-from nav2_simple_commander.robot_navigator import BasicNavigator
+from nav2_simple_commander.robot_navigator import BasicNavigator, TaskResult
 
 # ros2
 import rclpy
 from geometry_msgs.msg import PoseStamped
+from rclpy.duration import Duration
+from rclpy.node import Node
 
 # robot
-import robot_state
-
-
+from nav_interfaces.msg import GameStatus
+from auto_aim_interfaces.msg import Target
 
 
 '''
@@ -42,21 +43,107 @@ import robot_state
         
 
 '''
+
+
+
+
 class RobotDecision(Enum):
-    pass
+    NAV_TO_POSE = 0
+    NAV_THROUGH_POSE = 1
+    SCAN = 2
+
+class RobotMode(Enum):
+    NAV = 0
+    AUTO_AIM = 1
 
 
-navigator = BasicNavigator()
+class GameStatusSubscriber(Node):
+    def __init__(self):
+        super().__init__('game_status_sub')
+        self.subscription = self.create_subscription(
+            GameStatus,
+            "/game_status",
+            self.navStartCallback,
+            10,
+        )
 
-def setGoalPose():
-    pass
+    def navStartCallback(self, game_status : GameStatus):
+        nav = BasicNavigator()
 
-# 移动到定点
-def navTopose(pose_stamped : PoseStamped, goal_pose : PoseStamped):
-    pass
+        init_pose = PoseStamped()
+        init_pose.header.frame_id = 'map'
+        init_pose.header.stamp = nav.get_clock().now().to_msg()
+        init_pose.pose.position.x = 0.001
+        init_pose.pose.position.y = 0.002
+        init_pose.pose.orientation.z = 0.004
+        init_pose.pose.orientation.w = 1.0
 
-def main():
-    pass
+        goal_pose = PoseStamped()
+        goal_pose.header.frame_id = 'map'
+        goal_pose.header.stamp = nav.get_clock().now().to_msg()
+        goal_pose.pose.position.x = 6.5
+        goal_pose.pose.position.y = 0.12
+        goal_pose.pose.orientation.w = 0.0
+
+
+        if game_status.game_state == 1:
+            print("start navToPose......")
+
+            nav.setInitialPose(init_pose)
+            nav.lifecycleStartup()
+            nav.goToPose(goal_pose)
+            i = 0
+            while not nav.isTaskComplete():
+                i = i + 1
+                feedback = nav.getFeedback()
+                if feedback and i % 5 == 0:
+                    # print(
+                    #     'Estimated time of arrival: '
+                    #     + '{0:.0f}'.format(
+                    #         Duration.from_msg(feedback.estimated_time_remaining).nanoseconds
+                    #         / 1e9
+                    #     )
+                    #     + ' seconds.'
+                    # )
+
+                    # Some navigation timeout to demo cancellation
+                    if Duration.from_msg(feedback.navigation_time) > Duration(seconds=120.0):
+                        nav.cancelTask()
+                        nav.lifecycleShutdown()
+
+                    # Some navigation request change to demo preemption
+                    if Duration.from_msg(feedback.navigation_time) > Duration(seconds=60.0):
+                        goal_pose.pose.position.x = -3.0
+                        nav.goToPose(goal_pose)
+
+            if nav.isTaskComplete():
+                nav.lifecycleShutdown()
+
+            result = nav.getResult()
+
+            if result == TaskResult.SUCCEEDED:
+                print('Goal succeeded!')
+            elif result == TaskResult.CANCELED:
+                print('Goal was canceled!')
+            elif result == TaskResult.FAILED:
+                print('Goal failed!')
+            else:
+                print('Goal has an invalid return status!')
+
+
+
+def main(args=None):
+    rclpy.init()
+
+    subscriber = GameStatusSubscriber()
+    rclpy.spin(subscriber)
+    # Destroy the node explicitly
+    # (optional - otherwise it will be done automatically
+    # when the garbage collector destroys the node object)
+    subscriber.destroy_node()
+    rclpy.shutdown()
+
+
 
 
 

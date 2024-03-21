@@ -36,7 +36,7 @@
 //nav interface
 #include "nav_client/nav_packet.hpp"
 #include "auto_aim_interfaces/msg/target.hpp"
-#include "nav_interfaces/msg/socket_msg.hpp"
+#include "nav_interfaces/msg/game_status.hpp"
 
 #include "socket_io.hpp"
 
@@ -64,27 +64,12 @@ namespace nav_client{
 
         rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr nav_sub_;
 
+        // 发布比赛状态
+        rclcpp::Publisher<nav_interfaces::msg::GameStatus>::SharedPtr game_statu_pub_;
+
         std::thread receive_thread_;
 
     };
-
-
-//class udp_test : public Io::Client_socket_interface{
-//public:
-//    udp_test() {
-//        p_robot_set->vx_set = 1;
-//        p_robot_set->vy_set = 1;
-//        std::thread t1(&Client_socket_interface::task, this);
-//        std::thread t2(&Client_socket_interface::task2, this);
-//
-//        t1.join();
-//        t2.join();
-//    }
-//    ~udp_test();
-//
-//private:
-//
-//};
 
 
 }

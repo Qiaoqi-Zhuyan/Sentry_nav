@@ -24,6 +24,10 @@ namespace nav_client {
 
         RCLCPP_INFO(this->get_logger(), "send data to server: %s : %d", serv_ip_.c_str(), serv_port_);
 
+        game_statu_pub_ = this->create_publisher<nav_interfaces::msg::GameStatus>(
+                "/game_status", 10
+                );
+
         nav_sub_ = this->create_subscription<geometry_msgs::msg::Twist>(
                 "/cmd_vel_nav", rclcpp::SensorDataQoS(),
                 std::bind(&UDPSender::twistSender, this, std::placeholders::_1)
@@ -80,7 +84,6 @@ namespace nav_client {
         ReceivePacket recvData;
         while (rclcpp::ok()) {
             try {
-
                 bzero(buffer_, BUFFER_SIZE);
                 struct sockaddr_in serv_addr_in;
                 socklen_t serv_addr_in_len = sizeof(serv_addr_in);
@@ -98,13 +101,19 @@ namespace nav_client {
                     RCLCPP_INFO(this->get_logger(), "receive  buffer size : %d",n_recvfrom);
                 }
                 unpack(recvData, buffer_);
+
+                if (buffer_[0] == 0xA6){
+                    // 发布比赛状态
+                    nav_interfaces::msg::GameStatus gameStatus;
+                    gameStatus.game_state = buffer_[4];
+                    game_statu_pub_->publish(gameStatus);
+                }
 //                RCLCPP_INFO(this->get_logger(), "aim_x: %f, aim_y: %f, aim_z: %f", recvData.aim_x, recvData.aim_y, recvData.aim_z);
 
             } catch (const std::exception &ex) {
                 RCLCPP_ERROR(get_logger(), "Error receive data: %s", ex.what());
 
             }
-
 
         }
 
