@@ -1,5 +1,5 @@
 colcon build --symlink-install
-cmds=(  "ros2 launch nav_bringup bringup_real.launch.py rviz:=true world:=scant mode:=mapping"
+cmds=(  "ros2 launch nav_bringup bringup_real.launch.py rviz:=true world:=scan3_edt mode:=nav localization:=amcl"
 )
 
 

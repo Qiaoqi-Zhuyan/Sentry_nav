@@ -1,4 +1,5 @@
 # python
+import os
 from enum import Enum
 
 # nav2
@@ -44,6 +45,16 @@ from auto_aim_interfaces.msg import Target
 
 '''
 
+# cmds=(  "ros2 launch nav_bringup bringup_sim.launch.py world:=RMUL mode:=nav localization:=amcl"
+#         )
+#
+#
+# for cmd in "${cmds[@]}"
+#     do
+# echo Current CMD : "$cmd"
+# gnome-terminal -- bash -c "cd $(pwd);source install/setup.bash;$cmd;exec bash;"
+# sleep 0.2
+# done
 
 
 
@@ -56,6 +67,8 @@ class RobotMode(Enum):
     NAV = 0
     AUTO_AIM = 1
 
+shell_script = ("cd ~/mapping/simulation/rm_vision ;"
+                "bash start_auto_aim.sh")
 
 class GameStatusSubscriber(Node):
     def __init__(self):
@@ -81,9 +94,9 @@ class GameStatusSubscriber(Node):
         goal_pose = PoseStamped()
         goal_pose.header.frame_id = 'map'
         goal_pose.header.stamp = nav.get_clock().now().to_msg()
-        goal_pose.pose.position.x = 6.5
-        goal_pose.pose.position.y = 0.12
-        goal_pose.pose.orientation.w = 0.0
+        goal_pose.pose.position.x = 2.990
+        goal_pose.pose.position.y = 0.1600
+        goal_pose.pose.orientation.w = 0.7026
 
 
         if game_status.game_state == 1:
@@ -107,17 +120,22 @@ class GameStatusSubscriber(Node):
                     # )
 
                     # Some navigation timeout to demo cancellation
-                    if Duration.from_msg(feedback.navigation_time) > Duration(seconds=120.0):
+                    if Duration.from_msg(feedback.navigation_time) > Duration(seconds=30.0):
+                        n = os.system(shell_script)
+                        print(n)
                         nav.cancelTask()
                         nav.lifecycleShutdown()
-
-                    # Some navigation request change to demo preemption
-                    if Duration.from_msg(feedback.navigation_time) > Duration(seconds=60.0):
-                        goal_pose.pose.position.x = -3.0
-                        nav.goToPose(goal_pose)
+                    #
+                    # # Some navigation request change to demo preemption
+                    # if Duration.from_msg(feedback.navigation_time) > Duration(seconds=30.0):
+                    #     goal_pose.pose.position.x = -3.0
+                    #     nav.goToPose(goal_pose)
 
             if nav.isTaskComplete():
+                n = os.system(shell_script)
+                print(n)
                 nav.lifecycleShutdown()
+
 
             result = nav.getResult()
 

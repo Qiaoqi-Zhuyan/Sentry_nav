@@ -60,6 +60,7 @@ namespace nav_client{
         std::string serv_ip_;
         struct sockaddr_in serv_addr_in_;
         char buffer_[BUFFER_SIZE];
+        char buffer_r[BUFFER_SIZE];
 
 
         rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr nav_sub_;

@@ -80,15 +80,25 @@ namespace nav_client {
     }
 
     void UDPSender::receiveMsg() {
+        // 建立连接
+        socklen_t serv_addr_len = sizeof(serv_addr_in_);
+
+        int n_sendto = sendto(
+                client_socket_fd,
+                nullptr,
+                0,
+                MSG_CONFIRM,
+                (struct sockaddr *) &serv_addr_in_,
+                serv_addr_len);
 
         ReceivePacket recvData;
         while (rclcpp::ok()) {
             try {
-                bzero(buffer_, BUFFER_SIZE);
+                bzero(buffer_r, BUFFER_SIZE);
                 struct sockaddr_in serv_addr_in;
                 socklen_t serv_addr_in_len = sizeof(serv_addr_in);
                 int n_recvfrom = recvfrom(client_socket_fd,
-                                          buffer_,
+                                          buffer_r,
                                           BUFFER_SIZE,
                                           MSG_WAITALL,
                                           (struct sockaddr *) &serv_addr_in,

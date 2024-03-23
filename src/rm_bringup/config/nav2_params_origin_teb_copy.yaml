@@ -128,22 +128,22 @@ controller_server:
       plugin: teb_local_planner::TebLocalPlannerROS
       teb_autosize: 1.0
       dt_ref: 0.3
-      dt_hysteresis: 0.06
+      dt_hysteresis: 0.03
       max_samples: 500
       global_plan_overwrite_orientation: True
       allow_init_with_backwards_motion: True
-      max_global_plan_lookahead_dist: 1.37
-      global_plan_viapoint_sep: 0.05
+      max_global_plan_lookahead_dist: 0.7
+      global_plan_viapoint_sep: 0.2
       global_plan_prune_distance: 1.5
-      exact_arc_length: True
+      exact_arc_length: False
       feasibility_check_no_poses: 2
-      publish_feedback: False
+      publish_feedback: True
 
       # Robot
 
-      max_vel_x: 2.125
-      max_vel_x_backwards: 2.125
-      max_vel_y: 2.125
+      max_vel_x: 5.125
+      max_vel_x_backwards: 5.125
+      max_vel_y: 5.125
       max_vel_theta: 9.2
       acc_lim_x: 5.75
       acc_lim_y: 5.75
@@ -164,7 +164,7 @@ controller_server:
       inflation_dist: 0.6
       include_costmap_obstacles: True
       costmap_obstacles_behind_robot_dist: 1.0
-      obstacle_poses_affected: 30
+      obstacle_poses_affected: 2.0
       costmap_converter_plugin: ""
       costmap_converter_spin_thread: True
       costmap_converter_rate: 8
@@ -194,10 +194,11 @@ controller_server:
       weight_viapoint: 80.0
       weight_adapt_factor: 2.0
       # Homotopy Class Planner
-      enable_homotopy_class_planning: True
+      enable_homotopy_class_planning: False
       enable_multithreading: True
       max_number_classes: 3
       selection_cost_hysteresis: 1.0
+      
       selection_prefer_initial_plan: 0.95
       selection_obst_cost_scale: 1.0
       selection_alternative_time_cost: False
@@ -378,7 +379,8 @@ map_saver:
 
 planner_server:
   ros__parameters:
-    expected_planner_frequency: 30.0
+    expected_planner_frequency: 15.0
+
     use_sim_time: False
     planner_plugins: ["GridBased"]
     GridBased:
