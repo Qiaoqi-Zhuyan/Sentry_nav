@@ -15,6 +15,7 @@ def generate_launch_description():
     robot_urdf_launch_dir = os.path.join(get_package_share_directory('pb_rm_simulation'), 'launch')
     navigation2_launch_dir = os.path.join(get_package_share_directory('rm_navigation'), 'launch')
     nav2_client_launch_dir = os.path.join(get_package_share_directory('nav_client'), 'launch')
+    nav_control_launch_dir = os.path.join(get_package_share_directory('nav_control'), 'launch')
 
     # Create the launch configuration variables
     world = LaunchConfiguration('world')
@@ -194,6 +195,14 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(os.path.join(nav2_client_launch_dir, 'udp_sender_bringup.launch.py'))
     )
 
+
+    start_nav_control = Node(
+        package="nav_control",
+        executable="nav_to_pose_sim",
+        name="nav_to_pose_sim"
+    )
+
+
     ld = LaunchDescription()
 
     # Declare the launch options
@@ -210,5 +219,5 @@ def generate_launch_description():
     ld.add_action(start_mapping)
     ld.add_action(start_navigation2)
     ld.add_action(start_udp_sender)
-
+    ld.add_action(start_nav_control)
     return ld

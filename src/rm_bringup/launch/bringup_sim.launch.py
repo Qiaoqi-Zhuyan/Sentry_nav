@@ -165,6 +165,13 @@ def generate_launch_description():
             'rviz': use_rviz}.items()
     )
 
+    start_nav_control = Node(
+        package="nav_control",
+        executable="nav_to_pose_sim",
+        name="nav_to_pose_sim"
+    )
+
+
     ld = LaunchDescription()
 
     # Set environment variables
@@ -182,5 +189,6 @@ def generate_launch_description():
     ld.add_action(start_localization_group)
     ld.add_action(start_mapping)
     ld.add_action(start_navigation2)
+    # ld.add_action(start_nav_control)
 
     return ld

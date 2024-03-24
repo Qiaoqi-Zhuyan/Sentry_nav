@@ -67,7 +67,7 @@ class RobotMode(Enum):
     NAV = 0
     AUTO_AIM = 1
 
-shell_script = ("cd ~/mapping/simulation/rm_vision ;"
+shell_script = ("cd ~/mapping/simulation/socket_rv ;"
                 "bash start_auto_aim.sh")
 
 class GameStatusSubscriber(Node):

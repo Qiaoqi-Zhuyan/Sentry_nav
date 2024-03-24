@@ -29,19 +29,11 @@ namespace nav_client{
 
     struct ReceivePacket{
 
-        uint8_t detect_color; // 敌方装甲板 0 red, 1 blue
-        bool reset_tracker; //
-        uint8_t reserved;
-
-        // 云台信息，通过robot_state_publisher 发布进行转化 用于解算
+        uint8_t header = 0xA6;
         float roll;
         float pitch;
         float yaw;
-
-        float aim_x;
-        float aim_y;
-        float aim_z;
-
+        uint8_t gameStatus;
         // 比赛情况
 
     }__attribute__((packed));

@@ -28,6 +28,7 @@ namespace nav_client {
                 "/game_status", 10
                 );
 
+
         nav_sub_ = this->create_subscription<geometry_msgs::msg::Twist>(
                 "/cmd_vel_nav", rclcpp::SensorDataQoS(),
                 std::bind(&UDPSender::twistSender, this, std::placeholders::_1)
@@ -80,16 +81,8 @@ namespace nav_client {
     }
 
     void UDPSender::receiveMsg() {
-        // 建立连接
-        socklen_t serv_addr_len = sizeof(serv_addr_in_);
 
-        int n_sendto = sendto(
-                client_socket_fd,
-                nullptr,
-                0,
-                MSG_CONFIRM,
-                (struct sockaddr *) &serv_addr_in_,
-                serv_addr_len);
+
 
         ReceivePacket recvData;
         while (rclcpp::ok()) {
@@ -108,14 +101,16 @@ namespace nav_client {
                     RCLCPP_ERROR(this->get_logger(), "Error reading from server");
                 else {
                     RCLCPP_INFO(this->get_logger(), "Reading data from server: %s", serv_ip_.c_str());
-                    RCLCPP_INFO(this->get_logger(), "receive  buffer size : %d",n_recvfrom);
+//                    RCLCPP_INFO(this->get_logger(), "receive  buffer size : %d",n_recvfrom);
                 }
-                unpack(recvData, buffer_);
+                unpack(recvData, buffer_r);
 
-                if (buffer_[0] == 0xA6){
+                if (recvData.header == 0xA6){
                     // 发布比赛状态
+//                    std::cout<<buffer_r[0]<<"  "<<buffer_r[1]<<"  "<<buffer_r[1]<<"  "<<buffer_r[2]<<"  "<<buffer_r[3]<<"  "<<buffer_r[4]<<std::endl;
+
                     nav_interfaces::msg::GameStatus gameStatus;
-                    gameStatus.game_state = buffer_[4];
+                    gameStatus.game_state = recvData.gameStatus;
                     game_statu_pub_->publish(gameStatus);
                 }
 //                RCLCPP_INFO(this->get_logger(), "aim_x: %f, aim_y: %f, aim_z: %f", recvData.aim_x, recvData.aim_y, recvData.aim_z);

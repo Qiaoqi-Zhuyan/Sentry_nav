@@ -2,9 +2,9 @@
 cmds=(
   "source ~/.bashrc"
   "ros2 launch nav_bringup bringup_sim.launch.py world:=RMUL mode:=nav localization:=amcl"
-
 )
 
+#  "ros2 run nav_control nav_to_pose_sim"
 
 for cmd in "${cmds[@]}"
 do
